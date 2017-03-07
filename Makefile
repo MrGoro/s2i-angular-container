@@ -1,5 +1,5 @@
 
-IMAGE_NAME = s2i-angular-container
+IMAGE_NAME = schuermann/s2i-angular-container
 
 build:
 	docker build -t $(IMAGE_NAME) .
