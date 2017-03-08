@@ -2,8 +2,15 @@
 
 set -e
 
+pushd /tmp/src
+
+echo "---> Installing NPM Dependencies"
+npm install
+
 echo "---> Building Angular CLI Application"
-npm run build
+ng build --prod
+
+popd
 
 echo "---> Assemble httpd Container"
 
@@ -14,7 +21,7 @@ echo "---> Enabling s2i support in httpd24 image"
 config_s2i
 
 echo "---> Installing application source"
-cp -Rf /tmp/src/. ./
+cp -Rf /tmp/src/dist/. ./
 
 if [ -d ./httpd-cfg ]; then
   echo "---> Copying httpd configuration files..."
