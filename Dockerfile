@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhscl/httpd-24-rhel7
+FROM centos/httpd-24-centos7
 
 # This image provides a S2I for building Angular applications an running them inside a web container (nginx).
 
@@ -18,15 +18,17 @@ EXPOSE 443
 EXPOSE 8080
 EXPOSE 8443
 
+USER root
+
 # This image will be initialized with "npm run $NPM_RUN"
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
 # file for possible values of NPM_RUN
 ENV NPM_RUN=start \
-  NODE_VERSION= \
+  NODE_VERSION=7.7.1 \
   NPM_CONFIG_LOGLEVEL=info \
   NPM_CONFIG_PREFIX=$HOME/.npm-global \
   PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH \
-  NPM_VERSION=3 \
+  NPM_VERSION=4.1.2 \
   DEBUG_PORT=5858 \
   NODE_ENV=production \
   DEV_MODE=false
