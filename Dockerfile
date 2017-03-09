@@ -1,6 +1,6 @@
-FROM centos/httpd-24-centos7
+FROM openshift/base-centos7
 
-# This image provides a S2I for building Angular applications an running them inside a web container (nginx).
+# This image provides a S2I for building Angular applications an running them inside a web container (httpd).
 
 MAINTAINER Philipp Schürmann <spam@mrgoro.de>
 
@@ -13,12 +13,7 @@ LABEL summary="Platform for building and running Angular applications" \
       com.redhat.deployments-dir="/opt/app-root/src" \
       com.redhat.dev-mode.port="DEBUG_PORT:5858"
 
-EXPOSE 80
-EXPOSE 443
 EXPOSE 8080
-EXPOSE 8443
-
-USER root
 
 # This image will be initialized with "npm run $NPM_RUN"
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
@@ -32,6 +27,12 @@ ENV NPM_RUN=start \
   DEBUG_PORT=5858 \
   NODE_ENV=production \
   DEV_MODE=false
+
+# Install Apache httpd from www.softwarecollections.org
+RUN yum install -y \
+https://www.softwarecollections.org/repos/rhscl/httpd24/epel-7-x86_64/noarch/rhscl-httpd24-epel-7-x86_64-1-2.noarch.rpm && \
+  yum install -y --setopt=tsflags=nodocs httpd24 && \
+  yum clean all -y
 
 # Download and install a binary from nodejs.org
 # Add the gpg keys listed at https://github.com/nodejs/node
@@ -66,9 +67,16 @@ RUN npm cache add @angular/cli
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
+COPY ./contrib/ /opt/app-root
 
-# Drop the root user and make the content of /opt/app-root owned by user 1001
-RUN chown -R 1001:0 /opt/app-root
+# In order to drop the root user, we have to make some directories world
+# writeable as OpenShift default security model is to run the container under
+# random UID.
+RUN sed -i -f /opt/app-root/etc/httpdconf.sed /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
+    head -n151 /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit && \
+    chmod -R a+rwx /opt/rh/httpd24/root/var/run/httpd && \
+    chown -R 1001:1001 /opt/app-root
+
 USER 1001
 
 # Set the default CMD to print the usage of the language image

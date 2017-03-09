@@ -1,7 +1,10 @@
-#!/bin/bash
-
-source ${HTTPD_CONTAINER_SCRIPTS_PATH}/common.sh
-
-set -e
+#!/bin/bash -e
+#
+# S2I run script for the 'httpd-sti' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
 
 exec httpd -D FOREGROUND
