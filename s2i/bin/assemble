@@ -4,11 +4,14 @@ set -e
 
 pushd /tmp/src
 
-echo "---> Installing NPM Dependencies"
-npm install
+echo "---> Installing NPM Dependencies (with dev)"
+npm install --dev
+
+#echo "---> Installing Angular CLI globally"
+#npm install -g @angular/cli
 
 echo "---> Building Angular CLI Application"
-ng build --prod
+./node_modules/@angular/cli/bin/ng build --prod
 
 popd
 
@@ -20,8 +23,11 @@ echo "---> Enabling s2i support in httpd24 image"
 
 config_s2i
 
-echo "---> Installing application source"
+echo "---> Installing application source to web container"
 cp -Rf /tmp/src/dist/. ./
+
+echo "---> Removing application source"
+rm -rf /tmp/src
 
 if [ -d ./httpd-cfg ]; then
   echo "---> Copying httpd configuration files..."
