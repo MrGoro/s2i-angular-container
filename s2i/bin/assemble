@@ -15,35 +15,11 @@ echo "---> Building Angular CLI Application"
 
 popd
 
-echo "---> Assemble httpd Container"
-
-source ${HTTPD_CONTAINER_SCRIPTS_PATH}/common.sh
-
-echo "---> Enabling s2i support in httpd24 image"
-
-config_s2i
-
-echo "---> Installing application source to web container"
+echo "---> Installing application to web container"
 cp -Rf /tmp/src/dist/. ./
 
 echo "---> Removing application source"
 rm -rf /tmp/src
-
-if [ -d ./httpd-cfg ]; then
-  echo "---> Copying httpd configuration files..."
-  if [ "$(ls -A ./httpd-cfg/*.conf)" ]; then
-    cp -v ./httpd-cfg/*.conf "${HTTPD_CONFIGURATION_PATH}"
-    rm -rf ./httpd-cfg
-  fi
-else
-  if [ -d ./cfg ]; then
-    echo "---> Copying httpd configuration files from deprecated './cfg' directory, use './httpd-cfg' instead..."
-    if [ "$(ls -A ./cfg/*.conf)" ]; then
-      cp -v ./cfg/*.conf "${HTTPD_CONFIGURATION_PATH}"
-      rm -rf ./cfg
-    fi
-  fi
-fi
 
 # Fix source directory permissions
 fix-permissions ./
