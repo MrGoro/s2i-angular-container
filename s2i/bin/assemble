@@ -7,9 +7,6 @@ pushd /tmp/src
 echo "---> Installing NPM Dependencies (with dev)"
 npm install --dev
 
-#echo "---> Installing Angular CLI globally"
-#npm install -g @angular/cli
-
 echo "---> Building Angular CLI Application"
 ./node_modules/@angular/cli/bin/ng build --prod
 

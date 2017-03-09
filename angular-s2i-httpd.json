@@ -1,0 +1,39 @@
+{
+  "kind": "ImageStream",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "angular-s2i-httpd",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "dockerImageRepository": "schuermann/s2i-angular-container",
+    "tags": [
+      {
+        "name": "latest",
+        "annotations": {
+          "description": "Build Angular apps with CLI and run them with Apache httpd 2.4",
+          "supports": "angular,angular:1",
+          "tags": "builder,httpd",
+          "version": "1"
+        },
+        "from": {
+          "kind": "ImageStreamTag",
+          "name": "latest"
+        }
+      }
+    ]
+  },
+  "status": {
+    "dockerImageRepository": "schuermann/s2i-angular-container",
+    "tags": [
+      {
+        "tag": "1",
+        "items": [
+          {
+            "dockerImageReference": "schuermann/s2i-angular-container:latest"
+          }
+        ]
+      }
+    ]
+  }
+}
