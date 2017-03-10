@@ -1,0 +1,5 @@
+#!/bin/sh -e
+#
+# Save mode_modules to speed up the following builds.
+#
+tar cf - /tmp/src/node_modules
