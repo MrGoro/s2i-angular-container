@@ -12,6 +12,7 @@
         "name": "latest",
         "annotations": {
           "description": "Build Angular apps with CLI and run them with Apache httpd 2.4",
+          "iconClass": "js-icon",
           "supports": "angular,angular:1",
           "tags": "builder,httpd",
           "version": "1"
