@@ -2,8 +2,14 @@
 
 pushd /tmp/src
 
+if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+    echo "---> Restoring build artifacts (node_modules)"
+    mv /tmp/artifacts/* .
+fi
+
 echo "---> Installing NPM Dependencies (with dev)"
-npm install --dev
+npm install
+npm install --only=dev
 
 echo "---> Building Angular CLI Application"
 ./node_modules/@angular/cli/bin/ng build --prod

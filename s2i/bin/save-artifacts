@@ -2,4 +2,9 @@
 #
 # Save mode_modules to speed up the following builds.
 #
-tar cf - /tmp/src/node_modules
+pushd /tmp/src/ >/dev/null
+if [ -d node_modules ]; then
+    # all deps contents to tar stream
+    tar cf - node_modules
+fi
+popd >/dev/null
