@@ -12,6 +12,7 @@ This repository contains an angular app (ng new test-app) in the directory test/
 
 ```
 s2i build https://github.com/MrGoro/s2i-angular-container.git --context-dir=test/test-app/ schuermann/s2i-angular-container angular-sample-app
+docker run -p 8080:8080 angular-sample-app
 ```
 
 ## OpenShift
