@@ -16,7 +16,7 @@ docker run -p 8080:8080 angular-sample-app
 ```
 
 ### Incremental Builds
-You can trigger incremental builds by specifying *--incremental=true* when building an image. Incremental builds provide the already installed node_modules directory of a previous build within a following build.
+You can trigger incremental builds by specifying *--incremental=true* when building an image. Incremental builds provide the already installed node_modules directory from a previous build within a following build. This will dramatically speed up installation of NodeJS dependencies.
 ```
 s2i build https://github.com/MrGoro/s2i-angular-container.git --incremental=true --context-dir=test/test-app/ schuermann/s2i-angular-container angular-sample-app
 docker run -p 8080:8080 angular-sample-app
@@ -48,4 +48,16 @@ oc create -f angular-s2i-httpd.json
 To make the image stream globally availiable use the namespace *openshift*
 ```
 oc create -f angular-s2i-httpd.json -n openshift
+```
+### Incremental Builds
+To activate incremental builds in OpenShift, edit the build configuration (YAML) and insert *incremental: true* inside *spec:strategy:sourceStrategy*:
+```
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: angular
+        name: 'angular:latest'
+      incremental: true
 ```
