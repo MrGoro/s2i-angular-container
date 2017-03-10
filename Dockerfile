@@ -1,15 +1,15 @@
 FROM openshift/base-centos7
 
-# This image provides a S2I for building Angular applications an running them inside a web container (httpd).
+# This image provides a S2I builder image for Angular applications running inside Apache htttpd web container.
 
 MAINTAINER Philipp Schürmann <spam@mrgoro.de>
 
 LABEL summary="Platform for building and running Angular applications" \
-      io.k8s.description="Platform for building and running Angular applications" \
-      io.k8s.display-name="Angular" \
-      io.openshift.expose-services="80:http" \
+      io.k8s.description="OpenShift S2I builder image for Angular apps using Angular CLI and Apache httpd 2.4." \
+      io.k8s.display-name="Angular S2I httpd" \
+      io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,angular" \
-      com.redhat.dev-mode="DEV_MODE:true" \
+      com.redhat.dev-mode="DEV_MODE:false" \
       com.redhat.deployments-dir="/opt/app-root/src" \
       com.redhat.dev-mode.port="DEBUG_PORT:5858"
 
@@ -18,8 +18,7 @@ EXPOSE 8080
 # This image will be initialized with "npm run $NPM_RUN"
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
 # file for possible values of NPM_RUN
-ENV NPM_RUN=start \
-  NODE_VERSION=7.7.1 \
+ENV NODE_VERSION=7.7.1 \
   NPM_CONFIG_LOGLEVEL=info \
   NPM_CONFIG_PREFIX=$HOME/.npm-global \
   PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH \
@@ -63,20 +62,16 @@ RUN set -ex && \
   rm -rf ~/node-v${NODE_VERSION}-linux-x64.tar.gz ~/SHASUMS256.txt.asc /tmp/node-v${NODE_VERSION} ~/.npm ~/.node-gyp ~/.gnupg \
     /usr/share/man /tmp/* /usr/local/lib/node_modules/npm/man /usr/local/lib/node_modules/npm/doc /usr/local/lib/node_modules/npm/html
 
-RUN npm cache add @angular/cli
-
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 COPY ./contrib/ /opt/app-root
 
 # In order to drop the root user, we have to make some directories world
-# writeable as OpenShift default security model is to run the container under
-# random UID.
+# writeable as OpenShift default security model is to run the container under random UID.
 RUN sed -i -f /opt/app-root/etc/httpdconf.sed /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
     head -n151 /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit && \
     chmod -R a+rwx /opt/rh/httpd24/root/var/run/httpd && \
     chown -R 1001:1001 /opt/app-root
-
 USER 1001
 
 # Set the default CMD to print the usage of the language image
