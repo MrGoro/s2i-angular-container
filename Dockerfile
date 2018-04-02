@@ -18,11 +18,11 @@ EXPOSE 8080
 # This image will be initialized with "npm run $NPM_RUN"
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
 # file for possible values of NPM_RUN
-ENV NODE_VERSION=7.7.1 \
+ENV NODE_VERSION=8.9.4 \
   NPM_CONFIG_LOGLEVEL=info \
   NPM_CONFIG_PREFIX=$HOME/.npm-global \
   PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH \
-  NPM_VERSION=4.1.2 \
+  NPM_VERSION=5.6.0 \
   DEBUG_PORT=5858 \
   NODE_ENV=production \
   DEV_MODE=false
