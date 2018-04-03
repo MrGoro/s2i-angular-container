@@ -11,8 +11,13 @@ echo "---> Installing NPM Dependencies (with dev)"
 npm install
 npm install --only=dev
 
+
+echo "---> node version"
+node -v
+echo "---> npm version"
+npm -v
 echo "---> Building Angular CLI Application"
-./node_modules/@angular/cli/bin/ng build --prod
+npm run build
 
 popd
 
