@@ -13,15 +13,18 @@ npm install --only=dev
 
 echo "---> Building Angular CLI Application"
 echo "---> ./node_modules/@angular/cli/bin/ng build --prod"
-./node_modules/@angular/cli/bin/ng build --prod
+echo */
+# ./node_modules/@angular/cli/bin/ng build --prod
+echo npm run $SCRIPT
+npm run $SCRIPT
 
 popd
 
 echo "---> Installing application to web container"
 cp -Rf /tmp/src/dist/. ./
 
-#echo "---> Removing application source"
-#rm -rf /tmp/src
+echo "---> Removing application source"
+[ $SCRIPT == "build" ] && echo "---> Removing application source" && rm -rf /tmp/src
 
 # Fix source directory permissions
 fix-permissions ./
