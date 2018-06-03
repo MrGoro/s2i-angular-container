@@ -2,7 +2,7 @@ FROM openshift/base-centos7
 
 # This image provides a S2I builder image for Angular applications running inside Apache htttpd web container.
 
-MAINTAINER Philipp Schürmann <spam@mrgoro.de>
+LABEL Oussama ABID fork Philipp Schürmann <spam@mrgoro.de>
 
 LABEL summary="Platform for building and running Angular applications" \
       io.k8s.description="OpenShift S2I builder image for Angular apps using Angular CLI and Apache httpd 2.4." \
@@ -18,11 +18,11 @@ EXPOSE 8080
 # This image will be initialized with "npm run $NPM_RUN"
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
 # file for possible values of NPM_RUN
-ENV NODE_VERSION=7.7.1 \
+ENV NODE_VERSION=8.11.2 \
   NPM_CONFIG_LOGLEVEL=info \
   NPM_CONFIG_PREFIX=$HOME/.npm-global \
   PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH \
-  NPM_VERSION=4.1.2 \
+  NPM_VERSION=6.0.0 \
   DEBUG_PORT=5858 \
   NODE_ENV=production \
   DEV_MODE=false
